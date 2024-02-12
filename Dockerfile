@@ -1,32 +1,21 @@
-#
-# Ubuntu Dockerfile
-#
-# https://github.com/dockerfile/ubuntu
-#
+# Use an official Ubuntu base image
+FROM ubuntu:latest
 
-# Pull base image.
-FROM ubuntu:14.04
+# Set environment variables to avoid user interaction during installation
+ENV DEBIAN_FRONTEND=noninteractive
 
-# Install.
-RUN \
-  sed -i 's/# \(.*multiverse$\)/\1/g' /etc/apt/sources.list && \
-  apt-get update && \
-  apt-get -y upgrade && \
-  apt-get install -y build-essential && \
-  apt-get install -y software-properties-common && \
-  apt-get install -y byobu curl git htop man unzip vim wget && \
-  rm -rf /var/lib/apt/lists/*
+# Install dependencies and tools, assuming Python3 and pip for this example
+RUN apt-get update && \
+    apt-get install -y python3 python3-pip git
 
-# Add files.
-ADD root/.bashrc /root/.bashrc
-ADD root/.gitconfig /root/.gitconfig
-ADD root/.scripts /root/.scripts
+# Clone the dfir-iris repository (adjust the URL to the repository's actual location)
+# Alternatively, use pip or another package manager to install dfir-iris if it's available as a package
+RUN git clone https://github.com/your/dfir-iris-repo.git /dfir-iris && \
+    cd /dfir-iris && \
+    pip3 install -r requirements.txt  # Assuming there's a requirements.txt
 
-# Set environment variables.
-ENV HOME /root
+# Set the working directory to where dfir-iris is installed
+WORKDIR /dfir-iris
 
-# Define working directory.
-WORKDIR /root
-
-# Define default command.
-CMD ["bash"]
+# Run dfir-iris (adjust the command according to how dfir-iris is executed)
+CMD ["python3", "iris.py"]

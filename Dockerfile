@@ -1,25 +1,16 @@
-# Use an official Ubuntu base image
-FROM ubuntu:latest
+# Use Alpine Linux as the base image due to its small size
+FROM alpine:latest
 
-# Set environment variables to avoid user interaction during installation
-ENV DEBIAN_FRONTEND=noninteractive
+# Install bash for our hello world script (Alpine uses 'sh' by default)
+RUN apk add --no-cache bash
 
-# Install dependencies and tools, assuming Python3 and pip for this example
-RUN apt-get update && \
-    apt-get install -y python3 python3-pip git
+# Create a directory for our application
+WORKDIR /app
 
-# Clone the iris-web repository
-RUN git clone https://github.com/dfir-iris/iris-web.git /dfir-iris && \
-    cd /dfir-iris && \
-    git checkout v2.3.7 && \  # Check out the latest non-beta tagged version
-    cp .env.model .env && \    # Copy the environment file
-    pip3 install -r requirements.txt
+# Create a hello world script
+RUN echo '#!/bin/bash' > hello.sh \
+    && echo 'echo "Hello, World!"' >> hello.sh \
+    && chmod +x hello.sh
 
-# Set the working directory to where dfir-iris is installed
-WORKDIR /dfir-iris
-
-# Expose the port the IRIS web application runs on
-EXPOSE 8000
-
-# Run IRIS web application
-CMD ["python3", "iris.py"]
+# Run the script when the container starts
+CMD ["./hello.sh"]

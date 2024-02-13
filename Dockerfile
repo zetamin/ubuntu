@@ -8,14 +8,18 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
     apt-get install -y python3 python3-pip git
 
-# Clone the dfir-iris repository (adjust the URL to the repository's actual location)
-# Alternatively, use pip or another package manager to install dfir-iris if it's available as a package
-RUN git clone https://github.com/your/dfir-iris-repo.git /dfir-iris && \
+# Clone the iris-web repository
+RUN git clone https://github.com/dfir-iris/iris-web.git /dfir-iris && \
     cd /dfir-iris && \
-    pip3 install -r requirements.txt  # Assuming there's a requirements.txt
+    git checkout v2.3.7 && \  # Check out the latest non-beta tagged version
+    cp .env.model .env && \    # Copy the environment file
+    pip3 install -r requirements.txt
 
 # Set the working directory to where dfir-iris is installed
 WORKDIR /dfir-iris
 
-# Run dfir-iris (adjust the command according to how dfir-iris is executed)
+# Expose the port the IRIS web application runs on
+EXPOSE 8000
+
+# Run IRIS web application
 CMD ["python3", "iris.py"]

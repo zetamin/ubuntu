@@ -17,7 +17,11 @@ spec:
           value: "${env.WORKSPACE_PATH}"
         - name: DOCKERFILE
           value: "${env.DOCKERFILE_PATH}"
+        volumeMounts:
+        - name: docker-config
+          mountPath: /kaniko/.docker  # Specify the correct mount path for your use case
       restartPolicy: Never
+      volumes:
       - name: docker-config
         secret:
           secretName: docker-config-secret

@@ -6,7 +6,7 @@ spec:
   template:
     spec:
       containers:
-      - name: kaniko
+      - name: kaniko-test
         image: gcr.io/kaniko-project/executor:latest
         args:
         - "--context=git://${env.GIT_REPO}"

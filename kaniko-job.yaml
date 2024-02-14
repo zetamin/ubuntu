@@ -16,7 +16,3 @@ spec:
         - name: docker-config
           mountPath: /kaniko/.docker/
       restartPolicy: Never
-      volumes:
-      - name: docker-config
-        secret:
-          secretName: regcred  # Your Docker registry credentials secret

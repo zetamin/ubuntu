@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  generateName: kaniko-
+  name: kaniko-build-job  # Use a specific name instead of generateName
 spec:
   template:
     spec:
@@ -16,3 +16,7 @@ spec:
         - name: docker-config
           mountPath: /kaniko/.docker/
       restartPolicy: Never
+      volumes:
+      - name: docker-config
+        secret:
+          secretName: regcred  # Your Docker registry credentials secret

@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: kaniko-build-job  # Use a specific name instead of generateName
+  name: kaniko-build-job
 spec:
   template:
     spec:
@@ -9,14 +9,15 @@ spec:
       - name: kaniko
         image: gcr.io/kaniko-project/executor:latest
         args:
-        - "--context=${env.WORKSPACE}"
-        - "--dockerfile=${env.WORKSPACE}/Dockerfile"
+        - "--context=${env.WORKSPACE_PATH}"
+        - "--dockerfile=${env.DOCKERFILE_PATH}"
         - "--no-push"
-        volumeMounts:
-        - name: docker-config
-          mountPath: /kaniko/.docker/
+        env:
+        - name: WORKSPACE
+          value: "${env.WORKSPACE_PATH}"
+        - name: DOCKERFILE
+          value: "${env.DOCKERFILE_PATH}"
       restartPolicy: Never
-      volumes:
       - name: docker-config
         secret:
           secretName: docker-config-secret

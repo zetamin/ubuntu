@@ -1,13 +1,15 @@
-apiVersion: v1
-kind: Pod
+apiVersion: batch/v1
+kind: Job
 metadata:
-  name: kaniko-build
+  name: kaniko
 spec:
-  containers:
-  - name: kaniko
-    image: gcr.io/kaniko-project/executor:latest
-    args: 
-    - "--context=git://github.com/zetamin/ubuntu.git"
-    - "--dockerfile=Dockerfile"
-    - "--no-push"
-  restartPolicy: Never
+  template:
+    spec:
+      containers:
+      - name: kaniko
+        image: gcr.io/kaniko-project/executor:latest
+        args:
+        - "--context=git://${env.GIT_REPO}"
+        - "--dockerfile=Dockerfile"
+        - "--no-push"
+      restartPolicy: Never
